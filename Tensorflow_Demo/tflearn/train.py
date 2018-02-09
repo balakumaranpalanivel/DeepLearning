@@ -15,6 +15,8 @@ from models.baseline_model import *
 
 from tflearn.data_utils import shuffle
 
+IMAGE_SHAPE = 64
+
 def get_data(data_dir, hdf5):
     """This function loads in the data, either by loading images on the fly or by creating and
     loading from a hdf5 database.
@@ -41,12 +43,12 @@ def get_data(data_dir, hdf5):
         if not os.path.exists('hdf5/tiny-imagenet_train.h5'):
             from tflearn.data_utils import build_hdf5_image_dataset
             print ' Creating hdf5 train dataset.'
-            build_hdf5_image_dataset(train_file, image_shape=(64, 64), mode='file', output_path='hdf5/tiny-imagenet_train.h5', categorical_labels=True, normalize=True)
+            build_hdf5_image_dataset(train_file, image_shape=(IMAGE_SHAPE, IMAGE_SHAPE), mode='file', output_path='hdf5/tiny-imagenet_train.h5', categorical_labels=True, normalize=True)
 
         if not os.path.exists('hdf5/tiny-imagenet_val.h5'):
             from tflearn.data_utils import build_hdf5_image_dataset
             print ' Creating hdf5 val dataset.'
-            build_hdf5_image_dataset(val_file, image_shape=(64, 64), mode='file', output_path='hdf5/tiny-imagenet_val.h5', categorical_labels=True, normalize=True)
+            build_hdf5_image_dataset(val_file, image_shape=(IMAGE_SHAPE, IMAGE_SHAPE), mode='file', output_path='hdf5/tiny-imagenet_val.h5', categorical_labels=True, normalize=True)
 
         # Load training data from hdf5 dataset.
         h5f = h5py.File('hdf5/tiny-imagenet_train.h5', 'r')
@@ -61,8 +63,8 @@ def get_data(data_dir, hdf5):
     # Load images directly from disk when they are required.
     else:
         from tflearn.data_utils import image_preloader
-        X, Y = image_preloader(train_file, image_shape=(64, 64), mode='file', categorical_labels=True, normalize=True, filter_channel=True)
-        X_test, Y_test = image_preloader(val_file, image_shape=(64, 64), mode='file', categorical_labels=True, normalize=True, filter_channel=True)
+        X, Y = image_preloader(train_file, image_shape=(IMAGE_SHAPE, IMAGE_SHAPE), mode='file', categorical_labels=True, normalize=True, filter_channel=True)
+        X_test, Y_test = image_preloader(val_file, image_shape=(IMAGE_SHAPE, IMAGE_SHAPE), mode='file', categorical_labels=True, normalize=True, filter_channel=True)
 
     # Randomly shuffle the dataset.
     X, Y = shuffle(X, Y)
@@ -80,7 +82,10 @@ def main(data_dir, hdf5, name):
 
     # Set some variables for training.
     batch_size = 256
-    num_epochs = 10
+
+    # TODO - Change the value back to 10
+    num_epochs = 1
+   
     learning_rate = 0.001
 
     # Load in data.
@@ -97,6 +102,8 @@ def main(data_dir, hdf5, name):
 
     # Get the network definition.
     network = create_network(img_prep, img_aug, learning_rate)
+
+    print("NETWORK TRAINED")
 
     # Training. It will always save the best performing model on the validation data, even if it overfits.
     checkpoint_path = 'output/'+name+'/'

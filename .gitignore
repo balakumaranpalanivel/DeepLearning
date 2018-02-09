@@ -1,3 +1,6 @@
 Tensorflow_Demo/tflearn/data/*
 Tensorflow_Demo/tflearn/output/*
 Tensorflow_Demo/tflearn/tensorboard/*
+Tensorflow_Demo/tflearn/Alexnet_Test/*
+Tensorflow_Demo/tflearn/models/*.pyc
+
