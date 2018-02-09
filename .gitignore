@@ -1,2 +1,3 @@
 Tensorflow_Demo/tflearn/data/*
 Tensorflow_Demo/tflearn/output/*
+Tensorflow_Demo/tflearn/tensorboard/*
